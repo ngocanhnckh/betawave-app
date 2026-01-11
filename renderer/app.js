@@ -79,24 +79,18 @@ class BetaWaveApp {
     this.elements.audioPlayer.src = audioPath;
     this.elements.audioPlayer.volume = 0.05; // 5% default
 
-    // Set up the audio to start from 10 seconds
-    this.elements.audioPlayer.addEventListener('loadedmetadata', () => {
-      this.elements.audioPlayer.currentTime = 10;
-    });
-
-    // Handle loop - reset to 10 seconds when it loops
+    // Handle loop - reset to beginning when it ends
     this.elements.audioPlayer.addEventListener('ended', () => {
-      this.elements.audioPlayer.currentTime = 10;
+      this.elements.audioPlayer.currentTime = 0;
       if (this.isRunning && this.isFocusMode) {
         this.elements.audioPlayer.play();
       }
     });
 
-    // Also handle timeupdate for seamless loop
+    // Seamless loop - reset just before end
     this.elements.audioPlayer.addEventListener('timeupdate', () => {
-      // If audio is about to end, reset to 10 seconds
       if (this.elements.audioPlayer.duration - this.elements.audioPlayer.currentTime < 0.1) {
-        this.elements.audioPlayer.currentTime = 10;
+        this.elements.audioPlayer.currentTime = 0;
       }
     });
   }
@@ -213,7 +207,7 @@ class BetaWaveApp {
 
     // Start audio during focus
     if (this.isFocusMode) {
-      this.elements.audioPlayer.currentTime = 10;
+      this.elements.audioPlayer.currentTime = 0;
       this.elements.audioPlayer.play().catch(console.error);
     }
 
@@ -290,7 +284,7 @@ class BetaWaveApp {
     }
 
     // Start audio
-    this.elements.audioPlayer.currentTime = 10;
+    this.elements.audioPlayer.currentTime = 0;
     this.elements.audioPlayer.play().catch(console.error);
 
     // Clear any existing interval
@@ -316,7 +310,7 @@ class BetaWaveApp {
 
     // Stop audio
     this.elements.audioPlayer.pause();
-    this.elements.audioPlayer.currentTime = 10;
+    this.elements.audioPlayer.currentTime = 0;
 
     // Reset UI
     this.elements.startBtn.classList.remove('hidden');
