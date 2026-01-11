@@ -45,12 +45,23 @@ app.on('second-instance', () => {
 });
 
 function createTrayIcon() {
-  // Load tray icon from file (22x22 for standard, 44x44 for retina)
+  // Load tray icon from file
   const iconPath = path.join(__dirname, 'assets', 'trayIconTemplate.png');
+  const iconPath2x = path.join(__dirname, 'assets', 'trayIconTemplate@2x.png');
 
-  let trayIcon = nativeImage.createFromPath(iconPath);
+  let trayIcon;
 
-  if (trayIcon.isEmpty()) {
+  // Try to load @2x version for retina, fall back to standard
+  if (fs.existsSync(iconPath2x)) {
+    trayIcon = nativeImage.createFromPath(iconPath2x);
+    // Resize to 22x22 points (the @2x will be used for retina automatically)
+    trayIcon = trayIcon.resize({ width: 22, height: 22 });
+  } else if (fs.existsSync(iconPath)) {
+    trayIcon = nativeImage.createFromPath(iconPath);
+    trayIcon = trayIcon.resize({ width: 22, height: 22 });
+  }
+
+  if (!trayIcon || trayIcon.isEmpty()) {
     // Fallback: create a simple programmatic icon
     const size = 22;
     const buffer = Buffer.alloc(size * size * 4);
