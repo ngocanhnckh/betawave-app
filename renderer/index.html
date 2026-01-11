@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; media-src 'self' file:;">
+  <title>BetaWave</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Title bar -->
+    <div class="title-bar">
+      <div class="traffic-lights">
+        <button class="traffic-light close" id="closeBtn"></button>
+        <button class="traffic-light minimize" id="minimizeBtn"></button>
+      </div>
+      <div class="app-title">BetaWave</div>
+    </div>
+
+    <!-- Main content -->
+    <div class="content">
+      <!-- Timer display -->
+      <div class="timer-section">
+        <div class="timer-ring">
+          <svg class="progress-ring" viewBox="0 0 200 200">
+            <circle class="progress-ring-bg" cx="100" cy="100" r="90" />
+            <circle class="progress-ring-fill" cx="100" cy="100" r="90" id="progressRing" />
+          </svg>
+          <div class="timer-display">
+            <span class="timer-time" id="timerDisplay">25:00</span>
+            <span class="timer-label" id="timerLabel">FOCUS</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Goal input -->
+      <div class="goal-section">
+        <input type="text" class="goal-input" id="goalInput" placeholder="What's your focus goal?" maxlength="100">
+      </div>
+
+      <!-- Controls -->
+      <div class="controls-section">
+        <button class="control-btn primary" id="startBtn">
+          <span class="btn-icon">&#9654;</span>
+          <span class="btn-text">Start Focus</span>
+        </button>
+        <button class="control-btn secondary hidden" id="stopBtn">
+          <span class="btn-icon">&#9632;</span>
+          <span class="btn-text">Stop</span>
+        </button>
+      </div>
+
+      <!-- Volume control -->
+      <div class="volume-section">
+        <div class="volume-label">
+          <span class="volume-icon">&#128266;</span>
+          <span>Wave Volume</span>
+          <span class="volume-value" id="volumeValue">5%</span>
+        </div>
+        <input type="range" class="volume-slider" id="volumeSlider" min="0" max="100" value="5">
+      </div>
+
+      <!-- Focus mode selector -->
+      <div class="focus-mode-section">
+        <div class="focus-mode-header">
+          <label class="section-label">macOS Focus Mode</label>
+          <button class="setup-btn" id="setupFocusBtn" title="Setup Focus Shortcuts">?</button>
+        </div>
+        <select class="focus-select" id="focusModeSelect">
+          <option value="none">None</option>
+          <option value="dnd">Do Not Disturb</option>
+          <option value="work">Work</option>
+          <option value="personal">Personal</option>
+          <option value="sleep">Sleep</option>
+        </select>
+        <p class="focus-hint" id="focusHint"></p>
+        <a href="#" class="setup-link" id="setupLink">Setup Focus Mode shortcuts</a>
+      </div>
+
+      <!-- Session info -->
+      <div class="session-info" id="sessionInfo">
+        <div class="session-stat">
+          <span class="stat-value" id="sessionsCompleted">0</span>
+          <span class="stat-label">Sessions</span>
+        </div>
+        <div class="session-stat">
+          <span class="stat-value" id="totalFocusTime">0m</span>
+          <span class="stat-label">Focus Time</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Hidden audio element -->
+  <audio id="audioPlayer" loop></audio>
+
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline';">
+  <title>BetaWave - Rest Time</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
+      background: transparent;
+      color: white;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    .overlay-container {
+      width: 100vw;
+      height: 100vh;
+      background: linear-gradient(135deg,
+        rgba(30, 30, 50, 0.92),
+        rgba(60, 40, 80, 0.92)
+      );
+      backdrop-filter: blur(80px) saturate(150%);
+      -webkit-backdrop-filter: blur(80px) saturate(150%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 40px;
+    }
+
+    .rest-header {
+      text-align: center;
+    }
+
+    .rest-title {
+      font-size: 18px;
+      font-weight: 500;
+      color: rgba(255, 255, 255, 0.6);
+      text-transform: uppercase;
+      letter-spacing: 4px;
+      margin-bottom: 8px;
+    }
+
+    .rest-time {
+      font-size: 72px;
+      font-weight: 200;
+      letter-spacing: 4px;
+      background: linear-gradient(135deg, #fff, #a0d2db);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .suggestion-card {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 32px;
+      padding: 60px 80px;
+      text-align: center;
+      max-width: 600px;
+      box-shadow:
+        0 20px 60px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      animation: slideUp 0.5s ease-out;
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .suggestion-icon {
+      font-size: 80px;
+      margin-bottom: 24px;
+      display: block;
+      animation: float 3s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    .suggestion-title {
+      font-size: 36px;
+      font-weight: 600;
+      margin-bottom: 16px;
+      background: linear-gradient(135deg, #fff, #c4b5fd);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .suggestion-description {
+      font-size: 18px;
+      color: rgba(255, 255, 255, 0.7);
+      line-height: 1.6;
+    }
+
+    .skip-btn {
+      margin-top: 20px;
+      padding: 16px 48px;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 16px;
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 16px;
+      font-weight: 500;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .skip-btn:hover {
+      background: rgba(255, 255, 255, 0.15);
+      color: white;
+      transform: translateY(-2px);
+    }
+
+    .message {
+      font-size: 14px;
+      color: rgba(255, 255, 255, 0.5);
+      margin-top: 20px;
+    }
+
+    /* Animated background orbs */
+    .orb {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.4;
+      animation: float-orb 8s ease-in-out infinite;
+    }
+
+    .orb-1 {
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, #7c5cff, transparent);
+      top: -100px;
+      left: -100px;
+    }
+
+    .orb-2 {
+      width: 300px;
+      height: 300px;
+      background: radial-gradient(circle, #5ce1e6, transparent);
+      bottom: -50px;
+      right: -50px;
+      animation-delay: -4s;
+    }
+
+    .orb-3 {
+      width: 250px;
+      height: 250px;
+      background: radial-gradient(circle, #ff6b9d, transparent);
+      top: 50%;
+      right: 20%;
+      animation-delay: -2s;
+    }
+
+    @keyframes float-orb {
+      0%, 100% { transform: translate(0, 0); }
+      33% { transform: translate(30px, -30px); }
+      66% { transform: translate(-20px, 20px); }
+    }
+  </style>
+</head>
+<body>
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+
+  <div class="overlay-container">
+    <div class="rest-header">
+      <div class="rest-title">Time to Rest</div>
+      <div class="rest-time" id="restTimer">5:00</div>
+    </div>
+
+    <div class="suggestion-card">
+      <span class="suggestion-icon" id="suggestionIcon">💪</span>
+      <h1 class="suggestion-title" id="suggestionTitle">Do 5 Push-ups</h1>
+      <p class="suggestion-description" id="suggestionDescription">Quick burst of energy to get your blood flowing!</p>
+    </div>
+
+    <button class="skip-btn" id="skipBtn">Skip Rest & Continue Focus</button>
+    <p class="message">Rest helps you maintain peak performance</p>
+  </div>
+
+  <script>
+    // Receive suggestion from main process
+    window.electronAPI.onShowSuggestion((suggestion) => {
+      document.getElementById('suggestionIcon').textContent = suggestion.icon;
+      document.getElementById('suggestionTitle').textContent = suggestion.title;
+      document.getElementById('suggestionDescription').textContent = suggestion.description;
+    });
+
+    // Skip button
+    document.getElementById('skipBtn').addEventListener('click', () => {
+      window.electronAPI.closeOverlay();
+    });
+
+    // Keyboard shortcut to close
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' || e.key === ' ') {
+        window.electronAPI.closeOverlay();
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,43 @@
+{
+  "name": "betawave",
+  "version": "1.0.0",
+  "description": "Focus app with 40Hz binaural beats and Pomodoro timer",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder --mac",
+    "dist": "electron-builder --mac --publish never"
+  },
+  "keywords": [
+    "pomodoro",
+    "focus",
+    "binaural",
+    "productivity"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^39.2.7",
+    "electron-builder": "^26.0.12",
+    "sharp": "^0.34.5"
+  },
+  "build": {
+    "appId": "com.betawave.app",
+    "productName": "BetaWave",
+    "mac": {
+      "category": "public.app-category.productivity",
+      "icon": "assets/icon.icns",
+      "target": [
+        "dmg",
+        "zip"
+      ]
+    },
+    "files": [
+      "main.js",
+      "preload.js",
+      "renderer/**/*",
+      "assets/**/*",
+      "40hzbeat.mp3"
+    ]
+  }
+}
