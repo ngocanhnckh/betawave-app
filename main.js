@@ -179,7 +179,8 @@ function createMainWindow() {
 }
 
 function createOverlayWindow() {
-  const { width, height } = screen.getPrimaryDisplay().bounds;
+  // Use size (not bounds) to include menu bar area
+  const { width, height } = screen.getPrimaryDisplay().size;
 
   overlayWindow = new BrowserWindow({
     width: width,
@@ -191,8 +192,8 @@ function createOverlayWindow() {
     alwaysOnTop: true,
     skipTaskbar: true,
     focusable: true,
-    vibrancy: 'fullscreen-ui',
-    visualEffectState: 'active',
+    hasShadow: false,
+    enableLargerThanScreen: true,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       contextIsolation: true,
@@ -203,6 +204,7 @@ function createOverlayWindow() {
 
   overlayWindow.loadFile('renderer/overlay.html');
   overlayWindow.setVisibleOnAllWorkspaces(true);
+  overlayWindow.setAlwaysOnTop(true, 'screen-saver'); // Higher level than normal
   overlayWindow.hide();
 }
 
@@ -361,23 +363,23 @@ ipcMain.handle('set-focus-mode', async (event, mode) => {
 
 ipcMain.handle('show-overlay', async (event, suggestion) => {
   if (overlayWindow) {
+    // Ensure overlay covers full screen
+    const { width, height } = screen.getPrimaryDisplay().size;
+    overlayWindow.setBounds({ x: 0, y: 0, width, height });
     overlayWindow.webContents.send('show-suggestion', suggestion);
     overlayWindow.show();
-    overlayWindow.setSimpleFullScreen(true);
     overlayWindow.focus();
   }
 });
 
 ipcMain.handle('hide-overlay', async () => {
   if (overlayWindow) {
-    overlayWindow.setSimpleFullScreen(false);
     overlayWindow.hide();
   }
 });
 
 ipcMain.on('close-overlay', () => {
   if (overlayWindow) {
-    overlayWindow.setSimpleFullScreen(false);
     overlayWindow.hide();
   }
   if (mainWindow) {
