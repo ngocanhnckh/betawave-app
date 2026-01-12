@@ -79,6 +79,28 @@ class BetaWaveApp {
     this.elements.audioPlayer.src = audioPath;
     this.elements.audioPlayer.volume = 0.05; // 5% default
 
+    // Prevent media keys from controlling this audio
+    // Override MediaSession to ignore system media controls
+    if ('mediaSession' in navigator) {
+      navigator.mediaSession.metadata = null;
+
+      // Set action handlers to do nothing (prevents default behavior)
+      const noopHandler = () => {
+        // If running and in focus mode, keep playing
+        if (this.isRunning && this.isFocusMode) {
+          this.elements.audioPlayer.play().catch(() => {});
+        }
+      };
+
+      navigator.mediaSession.setActionHandler('play', noopHandler);
+      navigator.mediaSession.setActionHandler('pause', noopHandler);
+      navigator.mediaSession.setActionHandler('stop', noopHandler);
+      navigator.mediaSession.setActionHandler('seekbackward', null);
+      navigator.mediaSession.setActionHandler('seekforward', null);
+      navigator.mediaSession.setActionHandler('previoustrack', null);
+      navigator.mediaSession.setActionHandler('nexttrack', null);
+    }
+
     // Handle loop - reset to beginning when it ends
     this.elements.audioPlayer.addEventListener('ended', () => {
       this.elements.audioPlayer.currentTime = 0;

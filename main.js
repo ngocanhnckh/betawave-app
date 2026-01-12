@@ -363,18 +363,21 @@ ipcMain.handle('show-overlay', async (event, suggestion) => {
   if (overlayWindow) {
     overlayWindow.webContents.send('show-suggestion', suggestion);
     overlayWindow.show();
+    overlayWindow.setSimpleFullScreen(true);
     overlayWindow.focus();
   }
 });
 
 ipcMain.handle('hide-overlay', async () => {
   if (overlayWindow) {
+    overlayWindow.setSimpleFullScreen(false);
     overlayWindow.hide();
   }
 });
 
 ipcMain.on('close-overlay', () => {
   if (overlayWindow) {
+    overlayWindow.setSimpleFullScreen(false);
     overlayWindow.hide();
   }
   if (mainWindow) {
