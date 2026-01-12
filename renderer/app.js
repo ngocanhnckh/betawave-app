@@ -14,21 +14,86 @@ class BetaWaveApp {
     this.sessionsCompleted = 0;
     this.totalFocusSeconds = 0;
 
-    // Rest suggestions
+    // Rest suggestions - expanded list with variety
     this.restSuggestions = [
+      // Physical exercises
       { title: "Do 5 Push-ups", description: "Quick burst of energy to get your blood flowing!", icon: "💪" },
+      { title: "Do 10 Squats", description: "Strengthen your legs and boost circulation", icon: "🦵" },
+      { title: "Plank for 30 Seconds", description: "Engage your core and build stability", icon: "🏋️" },
+      { title: "Jumping Jacks", description: "Do 20 jumping jacks to energize yourself", icon: "⭐" },
       { title: "Stand Up, Sit Down", description: "Do 10 stand-up sit-downs to stretch your legs", icon: "🧍" },
-      { title: "Look Out The Window", description: "Give your eyes a break - focus on something distant", icon: "🪟" },
-      { title: "5-Minute Meditation", description: "Close your eyes and take deep breaths", icon: "🧘" },
-      { title: "Drink Water", description: "Stay hydrated! Grab a glass of water", icon: "💧" },
+      { title: "Calf Raises", description: "Stand on your tiptoes 15 times to stretch your calves", icon: "🦶" },
+      { title: "Wall Sit", description: "Hold a wall sit for 30 seconds", icon: "🧱" },
+      { title: "Lunges", description: "Do 5 lunges on each leg", icon: "🚶" },
+      { title: "High Knees", description: "March in place with high knees for 30 seconds", icon: "🏃" },
+      { title: "Burpees", description: "Do 3 burpees for a full-body wake-up", icon: "🔥" },
+
+      // Stretching
       { title: "Stretch Your Neck", description: "Roll your head slowly in circles", icon: "🔄" },
-      { title: "Walk Around", description: "Take a quick lap around your space", icon: "🚶" },
-      { title: "Eye Exercises", description: "Look up, down, left, right - repeat 5 times", icon: "👀" },
-      { title: "Deep Breathing", description: "4 seconds in, 4 seconds hold, 4 seconds out", icon: "🌬️" },
-      { title: "Shoulder Rolls", description: "Roll your shoulders forward and backward", icon: "🤸" },
+      { title: "Shoulder Rolls", description: "Roll your shoulders forward and backward 10 times", icon: "🤸" },
       { title: "Wrist Stretches", description: "Rotate your wrists and stretch your fingers", icon: "✋" },
-      { title: "Quick Dance", description: "Put on your favorite song and move!", icon: "💃" }
+      { title: "Touch Your Toes", description: "Bend forward and reach for your toes", icon: "🙆" },
+      { title: "Chest Opener", description: "Clasp hands behind back and open your chest", icon: "🫁" },
+      { title: "Hip Flexor Stretch", description: "Lunge forward and stretch your hip flexors", icon: "🧎" },
+      { title: "Spinal Twist", description: "Sit and twist your torso gently each direction", icon: "🌀" },
+      { title: "Arm Circles", description: "Make big circles with your arms 10 times each way", icon: "⭕" },
+      { title: "Side Stretch", description: "Reach overhead and lean to each side", icon: "🌊" },
+      { title: "Quad Stretch", description: "Stand on one leg and pull your foot to your glutes", icon: "🦩" },
+
+      // Eye care
+      { title: "Look Out The Window", description: "Give your eyes a break - focus on something distant", icon: "🪟" },
+      { title: "Eye Exercises", description: "Look up, down, left, right - repeat 5 times", icon: "👀" },
+      { title: "20-20-20 Rule", description: "Look at something 20 feet away for 20 seconds", icon: "👁️" },
+      { title: "Palm Your Eyes", description: "Cup your palms over closed eyes for 30 seconds", icon: "🙈" },
+      { title: "Blink Rapidly", description: "Blink 20 times to refresh your eyes", icon: "😌" },
+      { title: "Eye Figure-8s", description: "Trace a figure-8 pattern with your eyes", icon: "♾️" },
+
+      // Mindfulness
+      { title: "5-Minute Meditation", description: "Close your eyes and focus on your breath", icon: "🧘" },
+      { title: "Deep Breathing", description: "4 seconds in, 4 seconds hold, 4 seconds out", icon: "🌬️" },
+      { title: "Body Scan", description: "Notice sensations from head to toe", icon: "🫀" },
+      { title: "Gratitude Moment", description: "Think of 3 things you're grateful for", icon: "🙏" },
+      { title: "Mindful Listening", description: "Close your eyes and notice all the sounds around you", icon: "👂" },
+      { title: "Progressive Relaxation", description: "Tense and release each muscle group", icon: "😮‍💨" },
+      { title: "Visualization", description: "Picture your favorite peaceful place", icon: "🏖️" },
+      { title: "Counting Breath", description: "Count each exhale up to 10, then restart", icon: "🔢" },
+
+      // Hydration & nutrition
+      { title: "Drink Water", description: "Stay hydrated! Grab a glass of water", icon: "💧" },
+      { title: "Have Some Tea", description: "Make yourself a cup of herbal tea", icon: "🍵" },
+      { title: "Healthy Snack", description: "Grab some nuts, fruit, or veggies", icon: "🥕" },
+      { title: "Refill Your Water", description: "Top up your water bottle for the next session", icon: "🚰" },
+
+      // Movement
+      { title: "Walk Around", description: "Take a quick lap around your space", icon: "🚶" },
+      { title: "Quick Dance", description: "Put on your favorite song and move!", icon: "💃" },
+      { title: "Shake It Out", description: "Shake your hands, arms, and legs vigorously", icon: "🫨" },
+      { title: "March in Place", description: "March with arm swings for 1 minute", icon: "🎖️" },
+      { title: "Go Outside", description: "Step outside for some fresh air", icon: "🌳" },
+      { title: "Climb Stairs", description: "Go up and down the stairs a few times", icon: "🪜" },
+      { title: "Balance Practice", description: "Stand on one foot for 30 seconds each side", icon: "⚖️" },
+
+      // Self-care
+      { title: "Wash Your Face", description: "Splash some cold water on your face", icon: "🧊" },
+      { title: "Hand Massage", description: "Massage your palms and fingers for 1 minute", icon: "💆" },
+      { title: "Apply Eye Drops", description: "Refresh your eyes if they feel dry", icon: "💧" },
+      { title: "Fix Your Posture", description: "Sit up straight, shoulders back, chin tucked", icon: "🪑" },
+      { title: "Smile Wide", description: "Hold a big smile for 30 seconds - it boosts mood!", icon: "😊" },
+      { title: "Jaw Relaxation", description: "Open mouth wide, then relax - release tension", icon: "😮" },
+
+      // Mental refresh
+      { title: "Doodle Something", description: "Draw anything for 2 minutes - no judgment", icon: "✏️" },
+      { title: "Listen to Music", description: "Play your favorite uplifting song", icon: "🎵" },
+      { title: "Look at Nature", description: "Watch clouds, trees, or birds for a moment", icon: "🌿" },
+      { title: "Pet Your Pet", description: "Give your furry friend some love", icon: "🐱" },
+      { title: "Tidy Your Desk", description: "Quick 2-minute desk cleanup", icon: "🗂️" },
+      { title: "Text Someone", description: "Send a quick hello to a friend or family", icon: "📱" },
+      { title: "Plan Something Fun", description: "Think about something you're looking forward to", icon: "🎉" },
+      { title: "Read a Page", description: "Read one page of a book you enjoy", icon: "📖" }
     ];
+
+    // Track last shown suggestion to avoid repetition
+    this.lastSuggestionIndex = -1;
 
     // DOM Elements
     this.elements = {
@@ -321,7 +386,13 @@ class BetaWaveApp {
   }
 
   getRandomSuggestion() {
-    const index = Math.floor(Math.random() * this.restSuggestions.length);
+    // Ensure we don't show the same suggestion twice in a row
+    let index;
+    do {
+      index = Math.floor(Math.random() * this.restSuggestions.length);
+    } while (index === this.lastSuggestionIndex && this.restSuggestions.length > 1);
+
+    this.lastSuggestionIndex = index;
     return this.restSuggestions[index];
   }
 
