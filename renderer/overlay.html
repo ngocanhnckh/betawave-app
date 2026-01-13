@@ -38,6 +38,8 @@
       align-items: center;
       justify-content: center;
       gap: 40px;
+      position: relative;
+      z-index: 1;
     }
 
     .rest-header {
@@ -150,6 +152,8 @@
       filter: blur(80px);
       opacity: 0.4;
       animation: float-orb 8s ease-in-out infinite;
+      pointer-events: none;
+      z-index: 0;
     }
 
     .orb-1 {
