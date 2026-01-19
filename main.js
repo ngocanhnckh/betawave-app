@@ -188,12 +188,16 @@ function createOverlayWindow() {
     x: 0,
     y: 0,
     frame: false,
-    transparent: true,
+    transparent: false,
+    backgroundColor: '#1e1e32',
     alwaysOnTop: true,
     skipTaskbar: true,
     focusable: true,
     hasShadow: false,
-    enableLargerThanScreen: true,
+    fullscreenable: true,
+    acceptFirstMouse: true,
+    movable: false,
+    resizable: false,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       contextIsolation: true,
@@ -204,7 +208,7 @@ function createOverlayWindow() {
 
   overlayWindow.loadFile('renderer/overlay.html');
   overlayWindow.setVisibleOnAllWorkspaces(true);
-  overlayWindow.setAlwaysOnTop(true, 'screen-saver'); // Higher level than normal
+  overlayWindow.setAlwaysOnTop(true, 'floating');
   overlayWindow.hide();
 }
 
