@@ -215,20 +215,29 @@
   <script>
     // Receive suggestion from main process
     window.electronAPI.onShowSuggestion((suggestion) => {
+      console.log('Received suggestion:', suggestion);
       document.getElementById('suggestionIcon').textContent = suggestion.icon;
       document.getElementById('suggestionTitle').textContent = suggestion.title;
       document.getElementById('suggestionDescription').textContent = suggestion.description;
     });
 
-    // Skip button
-    document.getElementById('skipBtn').addEventListener('click', () => {
-      window.electronAPI.closeOverlay();
-    });
+    // Close overlay function
+    function closeOverlay() {
+      console.log('Closing overlay...');
+      if (window.electronAPI && window.electronAPI.closeOverlay) {
+        window.electronAPI.closeOverlay();
+      }
+    }
+
+    // Skip button - multiple event types for reliability
+    const skipBtn = document.getElementById('skipBtn');
+    skipBtn.addEventListener('click', closeOverlay);
+    skipBtn.addEventListener('mousedown', closeOverlay);
 
     // Keyboard shortcut to close
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape' || e.key === ' ') {
-        window.electronAPI.closeOverlay();
+        closeOverlay();
       }
     });
   </script>

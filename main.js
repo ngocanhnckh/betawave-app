@@ -370,20 +370,28 @@ ipcMain.handle('show-overlay', async (event, suggestion) => {
     // Ensure overlay covers full screen
     const { width, height } = screen.getPrimaryDisplay().size;
     overlayWindow.setBounds({ x: 0, y: 0, width, height });
-    overlayWindow.webContents.send('show-suggestion', suggestion);
     overlayWindow.show();
+    overlayWindow.setSimpleFullScreen(true);
     overlayWindow.focus();
+    // Send suggestion after window is shown and ready
+    setTimeout(() => {
+      if (overlayWindow) {
+        overlayWindow.webContents.send('show-suggestion', suggestion);
+      }
+    }, 150);
   }
 });
 
 ipcMain.handle('hide-overlay', async () => {
   if (overlayWindow) {
+    overlayWindow.setSimpleFullScreen(false);
     overlayWindow.hide();
   }
 });
 
 ipcMain.on('close-overlay', () => {
   if (overlayWindow) {
+    overlayWindow.setSimpleFullScreen(false);
     overlayWindow.hide();
   }
   if (mainWindow) {
