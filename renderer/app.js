@@ -114,7 +114,9 @@ class BetaWaveApp {
       totalFocusTime: document.getElementById('totalFocusTime'),
       audioPlayer: document.getElementById('audioPlayer'),
       closeBtn: document.getElementById('closeBtn'),
-      minimizeBtn: document.getElementById('minimizeBtn')
+      minimizeBtn: document.getElementById('minimizeBtn'),
+      focusDurationInput: document.getElementById('focusDuration'),
+      restDurationInput: document.getElementById('restDuration')
     };
 
     this.init();
@@ -227,6 +229,27 @@ class BetaWaveApp {
         this.elements.focusHint.textContent = '';
       }
     });
+
+    // Duration inputs
+    this.elements.focusDurationInput.addEventListener('change', (e) => {
+      const minutes = parseInt(e.target.value) || 25;
+      this.FOCUS_DURATION = Math.max(1, Math.min(120, minutes)) * 60;
+      e.target.value = Math.max(1, Math.min(120, minutes));
+      if (!this.isRunning && this.isFocusMode) {
+        this.timeRemaining = this.FOCUS_DURATION;
+        this.updateDisplay();
+      }
+    });
+
+    this.elements.restDurationInput.addEventListener('change', (e) => {
+      const minutes = parseInt(e.target.value) || 5;
+      this.REST_DURATION = Math.max(1, Math.min(30, minutes)) * 60;
+      e.target.value = Math.max(1, Math.min(30, minutes));
+      if (!this.isRunning && !this.isFocusMode) {
+        this.timeRemaining = this.REST_DURATION;
+        this.updateDisplay();
+      }
+    });
   }
 
   async loadFocusModes() {
@@ -285,6 +308,8 @@ class BetaWaveApp {
     this.elements.timerRing.classList.add('active');
     this.elements.goalInput.disabled = true;
     this.elements.focusModeSelect.disabled = true;
+    this.elements.focusDurationInput.disabled = true;
+    this.elements.restDurationInput.disabled = true;
 
     // Set macOS Focus mode
     const selectedMode = this.elements.focusModeSelect.value;
@@ -411,6 +436,8 @@ class BetaWaveApp {
     this.elements.timerRing.classList.remove('active');
     this.elements.goalInput.disabled = false;
     this.elements.focusModeSelect.disabled = false;
+    this.elements.focusDurationInput.disabled = false;
+    this.elements.restDurationInput.disabled = false;
 
     // Reset timer
     this.isFocusMode = true;
