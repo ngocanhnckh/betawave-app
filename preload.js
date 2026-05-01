@@ -19,6 +19,9 @@ contextBridge.exposeInMainWorld('electronAPI', {
   // Audio
   getAudioPath: () => ipcRenderer.invoke('get-audio-path'),
 
+  // Menu bar tray title
+  setTrayTitle: (title) => ipcRenderer.send('tray-title', title),
+
   // Overlay receiver
   onShowSuggestion: (callback) => ipcRenderer.on('show-suggestion', (event, suggestion) => callback(suggestion))
 });

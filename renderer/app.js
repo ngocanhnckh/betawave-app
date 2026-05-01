@@ -272,6 +272,12 @@ class BetaWaveApp {
     // Update label
     this.elements.timerLabel.textContent = this.isFocusMode ? 'FOCUS' : 'REST';
 
+    // Mirror countdown into the macOS menu bar while a session is running
+    if (this.isRunning) {
+      const marker = this.isFocusMode ? '◉' : '☕';
+      window.electronAPI.setTrayTitle(` ${marker} ${this.formatTime(this.timeRemaining)}`);
+    }
+
     // Update progress ring
     const totalDuration = this.isFocusMode ? this.FOCUS_DURATION : this.REST_DURATION;
     const progress = this.timeRemaining / totalDuration;
@@ -425,6 +431,9 @@ class BetaWaveApp {
     this.isRunning = false;
     clearInterval(this.timerInterval);
     this.timerInterval = null;
+
+    // Clear menu bar countdown
+    window.electronAPI.setTrayTitle('');
 
     // Stop audio
     this.elements.audioPlayer.pause();

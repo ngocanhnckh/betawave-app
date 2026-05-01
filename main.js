@@ -390,6 +390,12 @@ ipcMain.on('close-overlay', () => {
   }
 });
 
+ipcMain.on('tray-title', (event, title) => {
+  if (tray) {
+    tray.setTitle(title || '');
+  }
+});
+
 ipcMain.on('minimize-window', () => {
   if (mainWindow) {
     mainWindow.hide();
