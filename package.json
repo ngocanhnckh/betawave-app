@@ -1,6 +1,6 @@
 {
   "name": "betawave",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Focus app with 40Hz binaural beats and Pomodoro timer",
   "main": "main.js",
   "scripts": {
