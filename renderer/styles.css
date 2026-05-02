@@ -249,6 +249,16 @@ body {
   background: rgba(255, 255, 255, 0.15);
 }
 
+.control-btn.tertiary {
+  background: rgba(255, 200, 120, 0.15);
+  color: rgba(255, 220, 170, 0.95);
+  border: 1px solid rgba(255, 200, 120, 0.3);
+}
+
+.control-btn.tertiary:hover {
+  background: rgba(255, 200, 120, 0.25);
+}
+
 .control-btn.hidden {
   display: none;
 }

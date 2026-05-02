@@ -23,5 +23,8 @@ contextBridge.exposeInMainWorld('electronAPI', {
   setTrayTitle: (title) => ipcRenderer.send('tray-title', title),
 
   // Overlay receiver
-  onShowSuggestion: (callback) => ipcRenderer.on('show-suggestion', (event, suggestion) => callback(suggestion))
+  onShowSuggestion: (callback) => ipcRenderer.on('show-suggestion', (event, suggestion) => callback(suggestion)),
+  getCurrentSuggestion: () => ipcRenderer.invoke('get-current-suggestion'),
+  onOverlayTick: (callback) => ipcRenderer.on('overlay-tick', (event, seconds) => callback(seconds)),
+  sendOverlayTick: (seconds) => ipcRenderer.send('overlay-tick', seconds)
 });

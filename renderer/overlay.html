@@ -212,27 +212,6 @@
     <p class="message">Rest helps you maintain peak performance</p>
   </div>
 
-  <script>
-    // Receive suggestion from main process
-    window.electronAPI.onShowSuggestion((suggestion) => {
-      document.getElementById('suggestionIcon').textContent = suggestion.icon;
-      document.getElementById('suggestionTitle').textContent = suggestion.title;
-      document.getElementById('suggestionDescription').textContent = suggestion.description;
-    });
-
-    function closeOverlay() {
-      window.electronAPI.closeOverlay();
-    }
-
-    const skipBtn = document.getElementById('skipBtn');
-    skipBtn.addEventListener('click', closeOverlay);
-    skipBtn.addEventListener('mousedown', closeOverlay);
-
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' || e.key === ' ') {
-        closeOverlay();
-      }
-    });
-  </script>
+  <script src="overlay.js"></script>
 </body>
 </html>

@@ -116,7 +116,8 @@ class BetaWaveApp {
       closeBtn: document.getElementById('closeBtn'),
       minimizeBtn: document.getElementById('minimizeBtn'),
       focusDurationInput: document.getElementById('focusDuration'),
-      restDurationInput: document.getElementById('restDuration')
+      restDurationInput: document.getElementById('restDuration'),
+      restNowBtn: document.getElementById('restNowBtn')
     };
 
     this.init();
@@ -203,6 +204,10 @@ class BetaWaveApp {
       this.stopTimer();
     });
 
+    this.elements.restNowBtn.addEventListener('click', () => {
+      this.skipToRest();
+    });
+
     // Volume control
     this.elements.volumeSlider.addEventListener('input', (e) => {
       const volume = e.target.value;
@@ -278,6 +283,11 @@ class BetaWaveApp {
       window.electronAPI.setTrayTitle(` ${marker} ${this.formatTime(this.timeRemaining)}`);
     }
 
+    // Push rest countdown to the overlay so its own timer ticks
+    if (this.isRunning && !this.isFocusMode) {
+      window.electronAPI.sendOverlayTick(this.timeRemaining);
+    }
+
     // Update progress ring
     const totalDuration = this.isFocusMode ? this.FOCUS_DURATION : this.REST_DURATION;
     const progress = this.timeRemaining / totalDuration;
@@ -311,6 +321,7 @@ class BetaWaveApp {
     this.isRunning = true;
     this.elements.startBtn.classList.add('hidden');
     this.elements.stopBtn.classList.remove('hidden');
+    if (this.isFocusMode) this.elements.restNowBtn.classList.remove('hidden');
     this.elements.timerRing.classList.add('active');
     this.elements.goalInput.disabled = true;
     this.elements.focusModeSelect.disabled = true;
@@ -358,24 +369,7 @@ class BetaWaveApp {
     if (this.isFocusMode) {
       // Focus session completed
       this.sessionsCompleted++;
-      this.elements.audioPlayer.pause();
-
-      // Switch to rest mode
-      this.isFocusMode = false;
-      this.timeRemaining = this.REST_DURATION;
-      this.updateDisplay();
-
-      // Show rest overlay
-      const suggestion = this.getRandomSuggestion();
-      await window.electronAPI.showOverlay(suggestion);
-
-      // Turn off Focus mode during rest
-      await window.electronAPI.setFocusMode('none');
-
-      // Continue timer for rest period
-      this.timerInterval = setInterval(() => {
-        this.tick();
-      }, 1000);
+      await this.beginRest();
     } else {
       // Rest period completed - this should happen after overlay is closed
       // The overlay closing will trigger startFocusSession
@@ -386,6 +380,31 @@ class BetaWaveApp {
     }
   }
 
+  async beginRest() {
+    this.elements.audioPlayer.pause();
+
+    this.isFocusMode = false;
+    this.timeRemaining = this.REST_DURATION;
+    this.elements.restNowBtn.classList.add('hidden');
+    this.updateDisplay();
+
+    const suggestion = this.getRandomSuggestion();
+    await window.electronAPI.showOverlay(suggestion);
+
+    await window.electronAPI.setFocusMode('none');
+
+    this.timerInterval = setInterval(() => {
+      this.tick();
+    }, 1000);
+  }
+
+  async skipToRest() {
+    if (!this.isRunning || !this.isFocusMode) return;
+    clearInterval(this.timerInterval);
+    this.timerInterval = null;
+    await this.beginRest();
+  }
+
   async startFocusSession() {
     // Hide overlay if showing
     await window.electronAPI.hideOverlay();
@@ -393,6 +412,7 @@ class BetaWaveApp {
     // Reset to focus mode
     this.isFocusMode = true;
     this.timeRemaining = this.FOCUS_DURATION;
+    if (this.isRunning) this.elements.restNowBtn.classList.remove('hidden');
     this.updateDisplay();
 
     // Re-enable Focus mode
@@ -442,6 +462,7 @@ class BetaWaveApp {
     // Reset UI
     this.elements.startBtn.classList.remove('hidden');
     this.elements.stopBtn.classList.add('hidden');
+    this.elements.restNowBtn.classList.add('hidden');
     this.elements.timerRing.classList.remove('active');
     this.elements.goalInput.disabled = false;
     this.elements.focusModeSelect.disabled = false;

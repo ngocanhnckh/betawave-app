@@ -29,6 +29,7 @@ let mainWindow = null;
 let tray = null;
 let overlayWindow = null;
 let isQuitting = false;
+let currentSuggestion = null;
 
 // Prevent multiple instances
 const gotTheLock = app.requestSingleInstanceLock();
@@ -367,23 +368,45 @@ ipcMain.handle('set-focus-mode', async (event, mode) => {
 });
 
 ipcMain.handle('show-overlay', async (event, suggestion) => {
-  if (overlayWindow) {
-    const { x, y, width, height } = screen.getPrimaryDisplay().bounds;
-    overlayWindow.setBounds({ x, y, width, height });
-    overlayWindow.show();
-    overlayWindow.focus();
-    overlayWindow.webContents.send('show-suggestion', suggestion);
+  if (!overlayWindow) return;
+  currentSuggestion = suggestion;
+  // Cover the display where the widget is sitting; fall back to cursor display
+  let display;
+  if (mainWindow) {
+    const wb = mainWindow.getBounds();
+    display = screen.getDisplayMatching(wb);
+  }
+  if (!display) {
+    display = screen.getDisplayNearestPoint(screen.getCursorScreenPoint());
+  }
+  const { x, y, width, height } = display.bounds;
+  // Position on the chosen display first, then go simple-fullscreen so macOS
+  // lets us cover the menu bar / dock without clamping into the work area.
+  overlayWindow.setBounds({ x, y, width, height });
+  overlayWindow.show();
+  overlayWindow.setSimpleFullScreen(true);
+  overlayWindow.focus();
+  overlayWindow.webContents.send('show-suggestion', suggestion);
+});
+
+ipcMain.handle('get-current-suggestion', () => currentSuggestion);
+
+ipcMain.on('overlay-tick', (event, seconds) => {
+  if (overlayWindow && overlayWindow.isVisible()) {
+    overlayWindow.webContents.send('overlay-tick', seconds);
   }
 });
 
 ipcMain.handle('hide-overlay', async () => {
   if (overlayWindow) {
+    if (overlayWindow.isSimpleFullScreen()) overlayWindow.setSimpleFullScreen(false);
     overlayWindow.hide();
   }
 });
 
 ipcMain.on('close-overlay', () => {
   if (overlayWindow) {
+    if (overlayWindow.isSimpleFullScreen()) overlayWindow.setSimpleFullScreen(false);
     overlayWindow.hide();
   }
   if (mainWindow) {
