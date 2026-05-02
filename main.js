@@ -153,7 +153,8 @@ function createMainWindow() {
       preload: path.join(__dirname, 'preload.js'),
       contextIsolation: true,
       nodeIntegration: false,
-      sandbox: false
+      sandbox: false,
+      backgroundThrottling: false
     }
   });
 
@@ -179,14 +180,13 @@ function createMainWindow() {
 }
 
 function createOverlayWindow() {
-  // Use size (not bounds) to include menu bar area
-  const { width, height } = screen.getPrimaryDisplay().size;
+  const { x, y, width, height } = screen.getPrimaryDisplay().bounds;
 
   overlayWindow = new BrowserWindow({
-    width: width,
-    height: height,
-    x: 0,
-    y: 0,
+    x,
+    y,
+    width,
+    height,
     frame: false,
     transparent: false,
     backgroundColor: '#1e1e32',
@@ -202,7 +202,8 @@ function createOverlayWindow() {
       preload: path.join(__dirname, 'preload.js'),
       contextIsolation: true,
       nodeIntegration: false,
-      sandbox: false
+      sandbox: false,
+      backgroundThrottling: false
     }
   });
 
@@ -367,11 +368,11 @@ ipcMain.handle('set-focus-mode', async (event, mode) => {
 
 ipcMain.handle('show-overlay', async (event, suggestion) => {
   if (overlayWindow) {
-    const { width, height } = screen.getPrimaryDisplay().size;
-    overlayWindow.setBounds({ x: 0, y: 0, width, height });
-    overlayWindow.webContents.send('show-suggestion', suggestion);
+    const { x, y, width, height } = screen.getPrimaryDisplay().bounds;
+    overlayWindow.setBounds({ x, y, width, height });
     overlayWindow.show();
     overlayWindow.focus();
+    overlayWindow.webContents.send('show-suggestion', suggestion);
   }
 });
 
